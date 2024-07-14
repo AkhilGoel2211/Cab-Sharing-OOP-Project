@@ -8,7 +8,7 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles1.css" />
   </head>
   <body class="bg-gray-900 text-white font-sans">
     <!-- Desktop View -->
@@ -169,115 +169,73 @@
 
       <!-- Main Content -->
       <main class="flex-grow overflow-y-auto">
-        <!-- Ride Search Screen -->
-        <div id="rideSearchScreen" class="p-4">
-          <h2 class="text-xl font-bold mb-4">Hi Puru, Find your ideal ride!</h2>
+        <!-- Ride History Screen -->
+        <div id="rideHistoryScreen" class="p-4">
+          <h2 class="text-xl font-bold mb-4">RIDE HISTORY</h2>
           <div class="space-y-4">
-            <div class="flex space-x-2">
-              <select
-                class="flex-grow bg-purple-600 text-white py-2 px-3 rounded"
-              >
-                <option>Pick-Up</option>
-              </select>
-              <button class="bg-purple-600 text-white py-2 px-4 rounded">
-                Date
+            <div class="bg-gray-800 p-4 rounded-lg">
+              <div class="flex justify-between items-center">
+                <h3 class="text-purple-500">Upcoming</h3>
+                <p>My Cost INR 190</p>
+              </div>
+              <p class="font-bold">Driver Not Alloted</p>
+              <p class="text-gray-400">Source | Destination</p>
+              <p class="text-gray-400">Date | Time</p>
+              <p class="text-gray-400">Max No of People: 4</p>
+              <p class="text-gray-400">OTP: 523 123</p>
+              <p class="text-gray-400">Driver No: 12345 1234</p>
+              <p class="text-gray-400">Plate No: HR XXXX</p>
+              <p class="font-bold text-purple-500">Status: Not Confirmed</p>
+              <button class="bg-purple-600 text-white py-1 px-4 rounded mt-2">
+                CANCEL
               </button>
             </div>
-            <div class="flex space-x-2">
-              <select
-                class="flex-grow bg-purple-600 text-white py-2 px-3 rounded"
-              >
-                <option>Drop-Off</option>
-              </select>
-              <button class="bg-purple-600 text-white py-2 px-4 rounded">
-                Time
-              </button>
-            </div>
-            <div class="flex justify-between">
-              <label><input type="radio" name="type" value="SUV" /> SUV</label>
-              <label
-                ><input type="radio" name="type" value="Sedan" /> Sedan</label
-              >
-              <label
-                ><input type="radio" name="type" value="Mini" /> Mini</label
-              >
-              <label><input type="radio" name="type" value="Any" /> Any</label>
-            </div>
-            <div class="flex items-center">
-              <span class="mr-2">No of People</span>
-              <input type="range" min="1" max="6" value="1" class="flex-grow" />
-            </div>
-            <div class="flex space-x-2">
-              <button
-                id="findRidesBtn"
-                class="flex-grow bg-purple-600 text-white py-2 px-4 rounded"
-              >
-                Find Rides
-              </button>
-              <button
-                id="createRideBtn"
-                class="flex-grow bg-purple-600 text-white py-2 px-4 rounded"
-              >
-                Create Ride
-              </button>
-            </div>
+            <!-- Add more ride history items here -->
           </div>
         </div>
 
-        <!-- Ride List Screen -->
-        <div id="rideListScreen" class="hidden p-4">
-          <h2 class="text-xl font-bold mb-4">
-            SOURCE | DESTINATION | DATE | TIME
-          </h2>
-          <div id="rideList" class="space-y-4">
-            <!-- Ride list items will be appended here dynamically -->
+        <!-- Profile Screen -->
+        <div id="profileScreen" class="hidden p-4 bg-gray-900">
+          <div class="flex items-center mb-4">
+            <img
+              src="frankenstein.png"
+              alt="Profile Picture"
+              class="w-16 h-16 rounded-full mr-4"
+            />
+            <div>
+              <h2 class="text-xl font-bold">Hi Puru Gupta 👋</h2>
+              <p class="text-gray-400">+91 84919 19650</p>
+              <p class="text-gray-400">Balance: INR 5124</p>
+            </div>
           </div>
           <button
-            id="requestJoinBtn"
-            class="w-full bg-purple-600 text-white py-2 px-4 rounded mt-4"
+            class="bg-purple-600 text-white py-2 px-4 rounded mb-4 w-full"
           >
-            REQUEST TO JOIN THE RIDE
+            Rider
           </button>
-        </div>
-
-        <!-- Create Ride Screen -->
-        <div id="createRideScreen" class="hidden p-4">
-          <h2 class="text-xl font-bold mb-4">Set Price</h2>
-          <div class="flex space-x-2 mb-4">
-            <input
-              type="text"
-              placeholder="INR Price"
-              class="flex-grow bg-purple-600 text-white py-2 px-3 rounded"
-            />
-            <button class="bg-purple-600 text-white py-2 px-4 rounded">
-              Recommended Price
+          <div class="space-y-2">
+            <button
+              class="text-left w-full py-2"
+              onclick="toggleSection('edit-profile')"
+            >
+              Edit Profile
+            </button>
+            <div id="edit-profile" class="hidden pl-4">
+              <button class="text-left w-full py-2">Change Phone No</button>
+              <button class="text-left w-full py-2">
+                Change Display Picture
+              </button>
+            </div>
+            <button class="text-left w-full py-2">Trips History</button>
+            <button class="text-left w-full py-2">Add Balance</button>
+            <button class="bg-purple-600 text-white w-full py-2 mt-4 rounded">
+              Log Out
             </button>
           </div>
-          <button
-            id="publishRideBtn"
-            class="w-full bg-purple-600 text-white py-2 px-4 rounded"
-          >
-            Publish Ride
-          </button>
         </div>
       </main>
-
-      <!-- Footer -->
-      <footer class="p-4 bg-gray-800">
-        <div class="flex justify-between items-center">
-          <div>
-            <p class="font-bold">Pick-Up</p>
-            <p class="text-sm">OTP: 523 123</p>
-            <p class="text-sm">Time: 04:21 PM</p>
-          </div>
-          <div>
-            <p class="font-bold">Drop-Off</p>
-            <p class="text-sm">Driver No: 12345 1234</p>
-          </div>
-        </div>
-      </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script1.js"></script>
   </body>
 </html>
