@@ -28,19 +28,16 @@
             Rider
           </button>
           <div class="w-full">
-            <button
-              class="text-left w-full py-2"
-              onclick="toggleSection('edit-profile')"
-            >
-              Edit Profile
-            </button>
+            <button class="text-left w-full py-2">Edit Profile</button>
             <div id="edit-profile" class="hidden pl-4">
               <button class="text-left w-full py-2">Change Phone No</button>
               <button class="text-left w-full py-2">
                 Change Display Picture
               </button>
             </div>
-            <button class="text-left w-full py-2">Trips History</button>
+            <button onclick="showRideHistory()" class="text-left w-full py-2">
+              Trips History
+            </button>
             <button class="text-left w-full py-2">Add Balance</button>
             <button class="bg-red-600 text-white w-full py-2 mt-4 rounded">
               Log Out
@@ -57,7 +54,12 @@
             <h2 class="text-xl font-bold">
               Source | Destination | Date | Time
             </h2>
-            <button class="text-gray-400">View History</button>
+            <button
+              onclick="showTripsHistory()"
+              class="bg-purple-600 text-white py-1 px-2 rounded"
+            >
+              View History
+            </button>
           </div>
           <div class="space-y-2" id="ride-list">
             <!-- Ride list items will be appended here dynamically -->
@@ -290,19 +292,18 @@
             Rider
           </button>
           <div class="space-y-2">
-            <button
-              class="text-left w-full py-2"
-              onclick="toggleSection('edit-profile')"
-            >
-              Edit Profile
-            </button>
+            <button class="text-left w-full py-2">Edit Profile</button>
             <div id="edit-profile" class="hidden pl-4">
               <button class="text-left w-full py-2">Change Phone No</button>
               <button class="text-left w-full py-2">
                 Change Display Picture
               </button>
             </div>
-            <button id="tripsHistoryBtn" class="text-left w-full py-2">
+            <button
+              onclick="showRideHistory()"
+              id="tripsHistoryBtn"
+              class="text-left w-full py-2"
+            >
               Trips History
             </button>
             <button class="text-left w-full py-2">Add Balance</button>

@@ -14,6 +14,25 @@ const createRideScreen = document.getElementById("createRideScreen");
 const rideHistoryScreen = document.getElementById("rideHistoryScreen");
 const profileScreen = document.getElementById("profileScreen");
 
+// New elements for edit profile and trips history
+const desktopEditProfileBtn = document.querySelector(
+  "#desktop-view .sidebar [onclick=\"toggleSection('edit-profile')\"]"
+);
+const mobileEditProfileBtn = document.querySelector(
+  "#mobile-view #profileScreen [onclick=\"toggleSection('edit-profile')\"]"
+);
+const editProfileSection = document.getElementById("edit-profile");
+
+const desktopViewHistoryBtn = document.querySelector(
+  "#desktop-view .ride-list-container .flex button"
+);
+const desktopTripsHistoryBtn = document.querySelector(
+  '#desktop-view .sidebar [onclick="showRideHistory()"]'
+);
+const mobileTripsHistoryBtn = document.querySelector(
+  '#mobile-view #profileScreen [onclick="showRideHistory()"]'
+);
+
 // Event Listeners
 profileBtn.addEventListener("click", toggleProfileScreen);
 backBtn.addEventListener("click", showDefaultScreen);
@@ -27,6 +46,18 @@ publishRideBtn.addEventListener("click", () => {
   showDefaultScreen();
 });
 tripsHistoryBtn.addEventListener("click", showRideHistory);
+
+// New event listeners
+if (desktopEditProfileBtn)
+  desktopEditProfileBtn.addEventListener("click", toggleEditProfile);
+if (mobileEditProfileBtn)
+  mobileEditProfileBtn.addEventListener("click", toggleEditProfile);
+if (desktopViewHistoryBtn)
+  desktopViewHistoryBtn.addEventListener("click", showTripsHistory);
+if (desktopTripsHistoryBtn)
+  desktopTripsHistoryBtn.addEventListener("click", showTripsHistory);
+if (mobileTripsHistoryBtn)
+  mobileTripsHistoryBtn.addEventListener("click", showRideHistory);
 
 // Functions to switch between screens
 function showDefaultScreen() {
@@ -78,13 +109,11 @@ function hideAllScreens() {
   profileScreen.classList.add("hidden");
 }
 
-// Function to toggle visibility of sections
-function toggleSection(id) {
-  const section = document.getElementById(id);
-  section.classList.toggle("hidden");
+// Function to toggle visibility of edit profile section
+function toggleEditProfile() {
+  editProfileSection.classList.toggle("hidden");
 }
 
-// Function to populate ride list
 // Function to populate ride list
 function populateRideList() {
   const rideList = document.getElementById("rideList");
@@ -114,22 +143,6 @@ function populateRideList() {
       duration: 22,
       available: 1,
       total: 4,
-    },
-    {
-      name: "Saahil",
-      car: "Verna - Sedan",
-      cost: 280,
-      duration: 22,
-      available: 3,
-      total: 3,
-    },
-    {
-      name: "Saahil",
-      car: "Verna - Sedan",
-      cost: 280,
-      duration: 22,
-      available: 3,
-      total: 3,
     },
     {
       name: "Saahil",
@@ -209,6 +222,7 @@ function checkScreenSizeAndPopulateRideList() {
   );
 
   if (isMobile) {
+    // For mobile view, we don't need to do anything special
   } else {
     if (desktopRideListContainer) {
       desktopRideListContainer.classList.remove("hidden");
@@ -217,39 +231,61 @@ function checkScreenSizeAndPopulateRideList() {
   }
 }
 
+// Function to show trips history
+function showTripsHistory() {
+  const rideListContainer = document.querySelector(".ride-list-container");
+  const rideList = document.getElementById("ride-list");
+
+  // Hide the regular ride list and show trip history
+  rideList.classList.add("hidden");
+  rideListContainer.querySelector("h2").textContent = "Trips History";
+
+  // Create and show back button
+  const backButton = document.createElement("button");
+  backButton.textContent = "Back";
+  backButton.classList.add(
+    "bg-purple-600",
+    "text-white",
+    "py-1",
+    "px-2",
+    "rounded"
+  );
+  backButton.addEventListener("click", showDefaultRideList);
+
+  const flexContainer = rideListContainer.querySelector(".flex");
+  flexContainer.innerHTML = "";
+  flexContainer.appendChild(backButton);
+
+  // Populate trip history
+  populateRideHistory(rideListContainer);
+}
+
+// Function to show default ride list
+function showDefaultRideList() {
+  const rideListContainer = document.querySelector(".ride-list-container");
+  const rideList = document.getElementById("ride-list");
+
+  // Show the regular ride list and hide trip history
+  rideList.classList.remove("hidden");
+  rideListContainer.querySelector("h2").textContent =
+    "Source | Destination | Date | Time";
+
+  // Restore the "View History" button
+  const flexContainer = rideListContainer.querySelector(".flex");
+  flexContainer.innerHTML =
+    '<button onclick="showTripsHistory()" class="bg-purple-600 text-white py-1 px-2 rounded">View History</button>';
+
+  // Populate regular ride list
+  populateRideList();
+}
+
 // Function to populate ride history
-function populateRideHistory() {
-  const rideHistoryList = document.getElementById("rideHistoryList");
+function populateRideHistory(container = null) {
+  const rideHistoryList = container
+    ? container
+    : document.getElementById("rideHistoryList");
 
   const rideHistory = [
-    {
-      type: "Upcoming",
-      driverStatus: "Driver Not Alloted",
-      cost: 190,
-      source: "Source",
-      destination: "Destination",
-      date: "Date",
-      time: "Time",
-      maxPeople: 4,
-      otp: "523 123",
-      driverNo: "12345 1234",
-      plateNo: "HR XXXX",
-      status: "Not Confirmed",
-    },
-    {
-      type: "Upcoming",
-      driverStatus: "Driver Not Alloted",
-      cost: 190,
-      source: "Source",
-      destination: "Destination",
-      date: "Date",
-      time: "Time",
-      maxPeople: 4,
-      otp: "523 123",
-      driverNo: "12345 1234",
-      plateNo: "HR XXXX",
-      status: "Not Confirmed",
-    },
     {
       type: "Upcoming",
       driverStatus: "Driver Not Alloted",
@@ -270,7 +306,7 @@ function populateRideHistory() {
   rideHistoryList.innerHTML = "";
   rideHistory.forEach((ride) => {
     const rideElement = document.createElement("div");
-    rideElement.classList.add("bg-gray-800", "p-4", "rounded-lg");
+    rideElement.classList.add("bg-gray-800", "p-4", "rounded-lg", "mb-4");
     rideElement.innerHTML = `
       <div class="flex justify-between items-center">
         <h3 class="text-purple-500">${ride.type}</h3>
