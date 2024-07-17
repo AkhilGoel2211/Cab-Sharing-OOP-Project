@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cab Sharing</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="/styles/driver_home.css">
+  </head>
+  <body class="bg-gray-900 text-white font-sans">
+    <!-- Desktop View -->
+    <div id="desktop-view" class="container mx-auto">
+      <!-- Sidebar -->
+      <div class="sidebar bg-gray-800 rounded-lg p-4">
+        <div class="flex flex-col items-center">
+          <img
+            src="/imgs/profile.png"
+            alt="Profile Picture"
+            class="w-24 h-24 rounded-full mb-4"
+          />
+          <h2 class="text-xl font-bold">Hi Puru Gupta 👋</h2>
+          <p class="text-gray-400">+91 84919 19650</p>
+          <p class="text-gray-400 mb-4">Balance: INR 5124</p>
+          <button class="bg-purple-600 text-white py-2 px-4 rounded mb-4">
+            Rider
+          </button>
+          <div class="w-full">
+            <button class="text-left w-full py-2">Edit Profile</button>
+            <div id="edit-profile" class="hidden pl-4">
+              <button class="text-left w-full py-2">Change Phone No</button>
+              <button class="text-left w-full py-2">
+                Change Display Picture
+              </button>
+            </div>
+            <button onclick="showRideHistory()" class="text-left w-full py-2">
+              Trips History
+            </button>
+            <button class="text-left w-full py-2">Add Balance</button>
+            <button
+              onclick="showPopup(`Action Failed!`, false)"
+              class="bg-red-600 text-white w-full py-2 mt-4 rounded"
+            >
+<!--              type="submit"-->
+              Log Out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Ride List -->
+        <div class="ride-list-container bg-gray-800 rounded-lg">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">
+              Source | Destination | Date | Time
+            </h2>
+            <button
+              onclick="showTripsHistory()"
+              class="bg-purple-600 text-white py-1 px-2 rounded"
+            >
+              View History
+            </button>
+          </div>
+          <div class="space-y-2" id="ride-list">
+            <!-- Ride list items will be appended here dynamically -->
+          </div>
+        </div>
+
+        <div class="vertical-center">
+          <!-- Ride Search -->
+          <div class="ride-search-container bg-gray-800 rounded-lg">
+            <h2 class="text-xl font-bold mb-4">
+              Hi Puru, Find your ideal ride!
+            </h2>
+            <div class="space-y-2">
+              <div class="flex space-x-2">
+                <div class="w-1/2">
+                  <label class="block text-gray-400">Pick-Up</label>
+                  <select
+                    class="w-full bg-gray-700 text-white py-2 px-3 rounded"
+                  >
+                    <!-- Options -->
+                  </select>
+                </div>
+                <div class="w-1/2">
+                  <label class="block text-gray-400">Drop-Off</label>
+                  <select
+                    class="w-full bg-gray-700 text-white py-2 px-3 rounded"
+                  >
+                    <!-- Options -->
+                  </select>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <div class="w-1/2">
+                  <label class="block text-gray-400">Date</label>
+                  <input
+                    type="date"
+                    class="w-full bg-gray-700 text-white py-2 px-3 rounded"
+                  />
+                </div>
+                <div class="w-1/2">
+                  <label class="block text-gray-400">Time</label>
+                  <input
+                    type="time"
+                    class="w-full bg-gray-700 text-white py-2 px-3 rounded"
+                  />
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <div>
+                  <label class="block text-gray-400">Type</label>
+                  <div class="flex space-x-2">
+                    <label
+                      ><input type="radio" name="type" value="SUV" /> SUV</label
+                    >
+                    <label
+                      ><input type="radio" name="type" value="Sedan" />
+                      Sedan</label
+                    >
+                    <label
+                      ><input type="radio" name="type" value="Mini" />
+                      Mini</label
+                    >
+                    <label
+                      ><input type="radio" name="type" value="Any" /> Any</label
+                    >
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-gray-400">No of People</label>
+                  <select
+                    class="w-full bg-gray-700 text-white py-2 px-3 rounded"
+                  >
+                    <!-- Options -->
+                  </select>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <button class="bg-purple-600 text-white py-2 px-4 rounded">
+                  Find Rides
+                </button>
+                <button class="bg-purple-600 text-white py-2 px-4 rounded">
+                  Create Ride
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming Ride -->
+          <div class="upcoming-ride-container bg-gray-800 rounded-lg mt-4">
+            <div class="flex justify-between items-center">
+              <p class="font-bold">Pick-Up</p>
+              <p class="text-gray-400">OTP: 523 123</p>
+              <p class="font-bold">Drop-Off</p>
+            </div>
+            <p class="text-gray-400">Time: 04:21 PM</p>
+            <p class="text-gray-400">Driver No: 12345 1234</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile View -->
+    <div id="mobile-view" class="h-screen flex flex-col hidden">
+      <!-- Header -->
+      <header class="p-4 flex justify-between items-center bg-gray-800">
+        <button id="profileBtn" class="text-2xl">👤</button>
+        <h1 id="screenTitle" class="text-xl font-bold"></h1>
+        <button id="backBtn" class="text-2xl hidden">&lt;</button>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-grow overflow-y-auto bg-gray-900">
+        <!-- Ride Search Screen (Default) -->
+        <div id="rideSearchScreen" class="p-4">
+          <h2 class="text-xl font-bold mb-4">Hi Puru, Find your ideal ride!</h2>
+          <div class="space-y-4">
+            <div class="flex space-x-2">
+              <select
+                class="flex-grow bg-purple-600 text-white py-2 px-3 rounded"
+              >
+                <option>Pick-Up</option>
+              </select>
+              <button class="bg-purple-600 text-white py-2 px-4 rounded">
+                Date
+              </button>
+            </div>
+            <div class="flex space-x-2">
+              <select
+                class="flex-grow bg-purple-600 text-white py-2 px-3 rounded"
+              >
+                <option>Drop-Off</option>
+              </select>
+              <button class="bg-purple-600 text-white py-2 px-4 rounded">
+                Time
+              </button>
+            </div>
+            <div class="flex justify-between">
+              <label><input type="radio" name="type" value="SUV" /> SUV</label>
+              <label
+                ><input type="radio" name="type" value="Sedan" /> Sedan</label
+              >
+              <label
+                ><input type="radio" name="type" value="Mini" /> Mini</label
+              >
+              <label><input type="radio" name="type" value="Any" /> Any</label>
+            </div>
+            <div class="flex items-center">
+              <span class="mr-2">No of People</span>
+              <input type="range" min="1" max="6" value="1" class="flex-grow" />
+            </div>
+            <div class="flex space-x-2">
+              <button
+                id="findRidesBtn"
+                class="flex-grow bg-purple-600 text-white py-2 px-4 rounded"
+              >
+                Find Rides
+              </button>
+              <button
+                id="createRideBtn"
+                class="flex-grow bg-purple-600 text-white py-2 px-4 rounded"
+              >
+                Create Ride
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ride List Screen -->
+        <div id="rideListScreen" class="hidden p-4">
+          <h2 class="text-xl font-bold mb-4">
+            SOURCE | DESTINATION | DATE | TIME
+          </h2>
+          <div id="rideList" class="space-y-4">
+            <!-- Ride list items will be appended here dynamically -->
+          </div>
+          <button
+            id="requestJoinBtn"
+            class="w-full bg-purple-600 text-white py-2 px-4 rounded mt-4"
+          >
+            REQUEST TO JOIN THE RIDE
+          </button>
+        </div>
+
+        <!-- Create Ride Screen -->
+        <div id="createRideScreen" class="hidden p-4">
+          <h2 class="text-xl font-bold mb-4">Set Price</h2>
+          <div class="flex space-x-2 mb-4">
+            <input
+              type="text"
+              placeholder="INR Price"
+              class="flex-grow bg-purple-600 text-white py-2 px-3 rounded"
+            />
+            <button class="bg-purple-600 text-white py-2 px-4 rounded">
+              Recommended Price
+            </button>
+          </div>
+          <button
+            id="publishRideBtn"
+            class="w-full bg-purple-600 text-white py-2 px-4 rounded"
+          >
+            Publish Ride
+          </button>
+        </div>
+
+        <!-- Ride History Screen -->
+        <div id="rideHistoryScreen" class="hidden p-4">
+          <h2 class="text-xl font-bold mb-4">RIDE HISTORY</h2>
+          <div id="rideHistoryList" class="space-y-4">
+            <!-- Ride history items will be appended here dynamically -->
+          </div>
+        </div>
+
+        <!-- Profile Screen (Sidebar) -->
+        <div id="profileScreen" class="hidden p-4 bg-gray-900 h-full">
+          <div class="flex items-center mb-4">
+            <img
+              src="/imgs/profile.png"
+              alt="Profile Picture"
+              class="w-16 h-16 rounded-full mr-4"
+            />
+            <div>
+              <h2 class="text-xl font-bold">Hi Puru Gupta 👋</h2>
+              <p class="text-gray-400">+91 84919 19650</p>
+              <p class="text-gray-400">Balance: INR 5124</p>
+            </div>
+          </div>
+          <button
+            class="bg-purple-600 text-white py-2 px-4 rounded mb-4 w-full"
+          >
+            Rider
+          </button>
+          <div class="space-y-2">
+            <button class="text-left w-full py-2">Edit Profile</button>
+            <div id="edit-profile" class="hidden pl-4">
+              <button class="text-left w-full py-2">Change Phone No</button>
+              <button class="text-left w-full py-2">
+                Change Display Picture
+              </button>
+            </div>
+            <button
+              onclick="showRideHistory()"
+              id="tripsHistoryBtn"
+              class="text-left w-full py-2"
+            >
+              Trips History
+            </button>
+            <button class="text-left w-full py-2">Add Balance</button>
+            <button class="bg-purple-600 text-white w-full py-2 mt-4 rounded">
+              Log Out
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="p-4 bg-gray-800">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="font-bold">Pick-Up</p>
+            <p class="text-sm">OTP: 523 123</p>
+            <p class="text-sm">Time: 04:21 PM</p>
+          </div>
+          <div>
+            <p class="font-bold">Drop-Off</p>
+            <p class="text-sm">Driver No: 12345 1234</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="/scripts/driver_home.js"></script>
+  </body>
+</html>

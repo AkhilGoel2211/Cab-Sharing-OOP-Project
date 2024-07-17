@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Your Role - CabShare</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen">
+<div class="max-w-md w-full bg-gray-900 p-8 rounded-lg">
+  <div class="text-center mb-8">
+    <h1 class="text-5xl font-bold text-white mb-8">Hello Dear User!</h1>
+    <h1 class="text-4xl font-bold text-white">Choose Your Role</h1>
+  </div>
+  <form action="/choose-role" method="post">
+    <div class="text-center mb-8">
+      <div class="flex justify-around mb-4 text-white">
+        <label class="flex items-center">
+          <input type="radio" name="role" value="driver" class="mr-2" required> Driver
+        </label>
+        <label class="flex items-center">
+          <input type="radio" name="role" value="rider" class="mr-2"> Rider
+        </label>
+      </div>
+      <button class="bg-purple-500 text-white py-2 px-4 rounded" type="submit">Continue</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>
