@@ -326,6 +326,21 @@ function populateRideHistory(container = null) {
   });
 }
 
+function showPopup(message, isSuccess = true) {
+  // Create popup element
+  const popup = document.createElement("div");
+  popup.classList.add("popup", isSuccess ? "success" : "error");
+  popup.textContent = message;
+
+  // Add popup to the body
+  document.body.appendChild(popup);
+
+  // Remove popup after 3 seconds
+  setTimeout(() => {
+    popup.remove();
+  }, 3000);
+}
+
 // Initialize the app
 function initializeApp() {
   showDefaultScreen();
