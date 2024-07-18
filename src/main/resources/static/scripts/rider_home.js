@@ -114,105 +114,76 @@ function toggleEditProfile() {
   editProfileSection.classList.toggle("hidden");
 }
 
-// Function to populate ride list
-function populateRideList() {
-  const rideList = document.getElementById("rideList");
-  const desktopRideList = document.getElementById("ride-list");
+function formatDate(date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
 
-  const rides = [
-    {
-      name: "Akhil",
-      car: "Ertiga - SUV",
-      cost: 360,
-      duration: 22,
-      available: 2,
-      total: 4,
-    },
-    {
-      name: "Harrshit",
-      car: "Nano - Mini",
-      cost: 190,
-      duration: 22,
-      available: 1,
-      total: 2,
-    },
-    {
-      name: "Puru",
-      car: "Innova - SUV",
-      cost: 420,
-      duration: 22,
-      available: 1,
-      total: 4,
-    },
-    {
-      name: "Saahil",
-      car: "Verna - Sedan",
-      cost: 280,
-      duration: 22,
-      available: 3,
-      total: 3,
-    },
-    {
-      name: "Malik",
-      car: "Swift - Mini",
-      cost: 290,
-      duration: 22,
-      available: 1,
-      total: 4,
-    },
-  ];
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
 
-  // Populate mobile ride list
-  if (rideList) {
-    rideList.innerHTML = "";
-    rides.forEach((ride) => {
-      const rideElement = document.createElement("div");
-      rideElement.classList.add("bg-gray-800", "p-4", "rounded");
-      rideElement.innerHTML = `
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="font-bold">${ride.name}</h3>
-            <p class="text-sm text-gray-400">${ride.car}</p>
-          </div>
-          <div class="text-right">
-            <p class="font-bold">Total Cost INR ${ride.cost}</p>
-            <p class="text-sm text-gray-400">Duration ${ride.duration} Min</p>
-          </div>
-        </div>
-        <p class="text-sm text-gray-400 mt-2">Available: ${ride.available} | Total: ${ride.total}</p>
-      `;
-      rideList.appendChild(rideElement);
-    });
-  }
-
-  // Populate desktop ride list
-  if (desktopRideList) {
-    desktopRideList.innerHTML = '<h2 class="text-xl font-bold mb-4"></h2>';
-    rides.forEach((ride) => {
-      const rideElement = document.createElement("div");
-      rideElement.classList.add(
-        "flex",
-        "justify-between",
-        "items-center",
-        "bg-gray-700",
-        "p-2",
-        "rounded",
-        "mb-2"
-      );
-      rideElement.innerHTML = `
-        <div>
-          <p class="font-bold">${ride.name}</p>
-          <p class="text-gray-400">${ride.car}</p>
-          <p class="text-gray-400">Total Cost INR ${ride.cost}</p>
-          <p class="text-gray-400">Duration ${ride.duration} Min</p>
-          <p class="text-gray-400">Available : ${ride.available} | Total: ${ride.total}</p>
-        </div>
-        <button class="bg-purple-600 text-white py-1 px-2 rounded">Select</button>
-      `;
-      desktopRideList.appendChild(rideElement);
-    });
-  }
+    return [year, month, day].join('-');
 }
+
+// Function to populate ride lists using Axios
+function populateRideList() {
+    const pickup = document.getElementById('pickup').value;
+    const dropoff = document.getElementById('dropoff').value;
+//    const pickuptime = formatDate(document.getElementById('pickuptime').value);
+
+    axios.get('/available', {
+        params: {
+            pickup: pickup,
+            dropoff: dropoff
+        }
+    })
+    .then(response => {
+        const rides = response.data;
+        populateRidesDesktop(rides);
+        populateRidesMobile(rides);
+    })
+    .catch(error => console.error('Error loading rides:', error));
+}
+
+ function populateRidesDesktop(rides) {
+     const desktopRideList = document.getElementById("ride-list");
+     desktopRideList.innerHTML = '';
+     rides.forEach(ride => {
+         const rideElement = document.createElement("div");
+         rideElement.classList.add("flex", "justify-between", "items-center", "bg-gray-700", "p-2", "rounded", "mb-2");
+         rideElement.innerHTML = `
+             <form action="/driver/accept" method="post">
+             <div>
+                 <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                 <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                 <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+             </div>
+             <button type="submit" name="rideid" value="${ride.id}" class="bg-purple-600 text-white py-1 px-2 rounded">Accept</button>
+             </form>
+         `;
+         desktopRideList.appendChild(rideElement);
+     });
+ }
+
+ function populateRidesMobile(rides) {
+     const mobileRideList = document.getElementById("rideList");
+     mobileRideList.innerHTML = '';
+     rides.forEach(ride => {
+         const rideElement = document.createElement("div");
+         rideElement.classList.add("bg-gray-800", "p-4", "rounded");
+         rideElement.innerHTML = `
+             <div>
+                 <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                 <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                 <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+             </div>
+         `;
+         mobileRideList.appendChild(rideElement);
+     });
+ }
 
 // Function to check screen size and populate ride list accordingly
 function checkScreenSizeAndPopulateRideList() {

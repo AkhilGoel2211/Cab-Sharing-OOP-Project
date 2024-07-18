@@ -114,105 +114,148 @@ function toggleEditProfile() {
   editProfileSection.classList.toggle("hidden");
 }
 
-// Function to populate ride list
+// Function to populate ride lists using Axios
 function populateRideList() {
-  const rideList = document.getElementById("rideList");
-  const desktopRideList = document.getElementById("ride-list");
-
-  const rides = [
-    {
-      name: "Akhil",
-      car: "Ertiga - SUV",
-      cost: 360,
-      duration: 22,
-      available: 2,
-      total: 4,
-    },
-    {
-      name: "Harrshit",
-      car: "Nano - Mini",
-      cost: 190,
-      duration: 22,
-      available: 1,
-      total: 2,
-    },
-    {
-      name: "Puru",
-      car: "Innova - SUV",
-      cost: 420,
-      duration: 22,
-      available: 1,
-      total: 4,
-    },
-    {
-      name: "Saahil",
-      car: "Verna - Sedan",
-      cost: 280,
-      duration: 22,
-      available: 3,
-      total: 3,
-    },
-    {
-      name: "Malik",
-      car: "Swift - Mini",
-      cost: 290,
-      duration: 22,
-      available: 1,
-      total: 4,
-    },
-  ];
-
-  // Populate mobile ride list
-  if (rideList) {
-    rideList.innerHTML = "";
-    rides.forEach((ride) => {
-      const rideElement = document.createElement("div");
-      rideElement.classList.add("bg-gray-800", "p-4", "rounded");
-      rideElement.innerHTML = `
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="font-bold">${ride.name}</h3>
-            <p class="text-sm text-gray-400">${ride.car}</p>
-          </div>
-          <div class="text-right">
-            <p class="font-bold">Total Cost INR ${ride.cost}</p>
-            <p class="text-sm text-gray-400">Duration ${ride.duration} Min</p>
-          </div>
-        </div>
-        <p class="text-sm text-gray-400 mt-2">Available: ${ride.available} | Total: ${ride.total}</p>
-      `;
-      rideList.appendChild(rideElement);
-    });
-  }
-
-  // Populate desktop ride list
-  if (desktopRideList) {
-    desktopRideList.innerHTML = '<h2 class="text-xl font-bold mb-4"></h2>';
-    rides.forEach((ride) => {
-      const rideElement = document.createElement("div");
-      rideElement.classList.add(
-        "flex",
-        "justify-between",
-        "items-center",
-        "bg-gray-700",
-        "p-2",
-        "rounded",
-        "mb-2"
-      );
-      rideElement.innerHTML = `
-        <div>
-          <p class="font-bold">${ride.name}</p>
-          <p class="text-gray-400">${ride.car}</p>
-          <p class="text-gray-400">Total Cost INR ${ride.cost}</p>
-          <p class="text-gray-400">Duration ${ride.duration} Min</p>
-          <p class="text-gray-400">Available : ${ride.available} | Total: ${ride.total}</p>
-        </div>
-        <button class="bg-purple-600 text-white py-1 px-2 rounded">Select</button>
-      `;
-      desktopRideList.appendChild(rideElement);
-    });
-  }
+    axios.get('/driver/available')
+    .then(response => {
+        const rides = response.data;
+        populateRidesDesktop(rides);
+        populateRidesMobile(rides);
+    })
+    .catch(error => console.error('Error loading rides:', error));
 }
+
+function populateRidesDesktop(rides) {
+    const desktopRideList = document.getElementById("ride-list");
+    desktopRideList.innerHTML = '';
+    rides.forEach(ride => {
+        const rideElement = document.createElement("div");
+        rideElement.classList.add("flex", "justify-between", "items-center", "bg-gray-700", "p-2", "rounded", "mb-2");
+        rideElement.innerHTML = `
+            <form action="/driver/accept" method="post">
+            <div>
+                <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+            </div>
+            <button type="submit" name="rideid" value="${ride.id}" class="bg-purple-600 text-white py-1 px-2 rounded">Accept</button>
+            </form>
+        `;
+        desktopRideList.appendChild(rideElement);
+    });
+}
+
+function populateRidesMobile(rides) {
+    const mobileRideList = document.getElementById("rideList");
+    mobileRideList.innerHTML = '';
+    rides.forEach(ride => {
+        const rideElement = document.createElement("div");
+        rideElement.classList.add("bg-gray-800", "p-4", "rounded");
+        rideElement.innerHTML = `
+            <div>
+                <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+            </div>
+        `;
+        mobileRideList.appendChild(rideElement);
+    });
+}
+
+// Function to populate upcoming ride lists using Axios
+function showUpcomingRideList() {
+    axios.get('/driver/upcoming')
+    .then(response => {
+        const rides = response.data;
+        populateUpcomingRidesDesktop(rides);
+        populateUpcomingRidesMobile(rides);
+    })
+    .catch(error => console.error('Error loading rides:', error));
+}
+
+function populateUpcomingRidesDesktop(rides) {
+    const desktopRideList = document.getElementById("ride-list");
+    desktopRideList.innerHTML = '';
+    rides.forEach(ride => {
+        const rideElement = document.createElement("div");
+        rideElement.classList.add("flex", "justify-between", "items-center", "bg-gray-700", "p-2", "rounded", "mb-2");
+        rideElement.innerHTML = `
+            <form action="/driver/endride" method="post">
+            <div>
+                <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+            </div>
+            <button type="submit" name="rideid" value="${ride.id}" class="bg-purple-600 text-white py-1 px-2 rounded">End Ride</button>
+            </form>
+        `;
+        desktopRideList.appendChild(rideElement);
+    });
+}
+
+function populateUpcomingRidesMobile(rides) {
+    const mobileRideList = document.getElementById("rideList");
+    mobileRideList.innerHTML = '';
+    rides.forEach(ride => {
+        const rideElement = document.createElement("div");
+        rideElement.classList.add("bg-gray-800", "p-4", "rounded");
+        rideElement.innerHTML = `
+            <div>
+                <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+            </div>
+        `;
+        mobileRideList.appendChild(rideElement);
+    });
+}
+
+
+// Function to populate past ride lists using Axios
+function showPastRideList() {
+    axios.get('/driver/finished')
+    .then(response => {
+        const rides = response.data;
+        populatePastRidesDesktop(rides);
+        populatePastRidesMobile(rides);
+    })
+    .catch(error => console.error('Error loading rides:', error));
+}
+
+function populatePastRidesDesktop(rides) {
+    const desktopRideList = document.getElementById("ride-list");
+    desktopRideList.innerHTML = '';
+    rides.forEach(ride => {
+        const rideElement = document.createElement("div");
+        rideElement.classList.add("flex", "justify-between", "items-center", "bg-gray-700", "p-2", "rounded", "mb-2");
+        rideElement.innerHTML = `
+            <div>
+                <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+            </div>
+        `;
+        desktopRideList.appendChild(rideElement);
+    });
+}
+
+function populatePastRidesMobile(rides) {
+    const mobileRideList = document.getElementById("rideList");
+    mobileRideList.innerHTML = '';
+    rides.forEach(ride => {
+        const rideElement = document.createElement("div");
+        rideElement.classList.add("bg-gray-800", "p-4", "rounded");
+        rideElement.innerHTML = `
+            <div>
+                <h3 class="font-bold">${ride.pickup} - ${ride.dropoff}</h3>
+                <p class="text-sm text-gray-400">Max Capacity: ${ride.maxcap}, Current: ${ride.currentnum}</p>
+                <p class="font-bold">Total Cost INR ${ride.cost.toFixed(2)}</p>
+            </div>
+        `;
+        mobileRideList.appendChild(rideElement);
+    });
+}
+
 
 // Function to check screen size and populate ride list accordingly
 function checkScreenSizeAndPopulateRideList() {
@@ -279,53 +322,6 @@ function showDefaultRideList() {
   populateRideList();
 }
 
-// Function to populate ride history
-function populateRideHistory(container = null) {
-  const rideHistoryList = container
-    ? container
-    : document.getElementById("rideHistoryList");
-
-  const rideHistory = [
-    {
-      type: "Upcoming",
-      driverStatus: "Driver Not Alloted",
-      cost: 190,
-      source: "Source",
-      destination: "Destination",
-      date: "Date",
-      time: "Time",
-      maxPeople: 4,
-      otp: "523 123",
-      driverNo: "12345 1234",
-      plateNo: "HR XXXX",
-      status: "Not Confirmed",
-    },
-    // Add more ride history items here
-  ];
-
-  rideHistoryList.innerHTML = "";
-  rideHistory.forEach((ride) => {
-    const rideElement = document.createElement("div");
-    rideElement.classList.add("bg-gray-800", "p-4", "rounded-lg", "mb-4");
-    rideElement.innerHTML = `
-      <div class="flex justify-between items-center">
-        <h3 class="text-purple-500">${ride.type}</h3>
-        <p>My Cost INR ${ride.cost}</p>
-      </div>
-      <p class="font-bold">${ride.driverStatus}</p>
-      <p class="text-gray-400">${ride.source} | ${ride.destination}</p>
-      <p class="text-gray-400">${ride.date} | ${ride.time}</p>
-      <p class="text-gray-400">Max No of People: ${ride.maxPeople}</p>
-      <p class="text-gray-400">OTP: ${ride.otp}</p>
-      <p class="text-gray-400">Driver No: ${ride.driverNo}</p>
-      <p class="text-gray-400">Plate No: ${ride.plateNo}</p>
-      <p class="font-bold text-purple-500">Status: ${ride.status}</p>
-      <button class="bg-purple-600 text-white py-1 px-4 rounded mt-2">CANCEL</button>
-    `;
-    rideHistoryList.appendChild(rideElement);
-  });
-}
-
 function showPopup(message, isSuccess = true) {
   // Create popup element
   const popup = document.createElement("div");
@@ -341,14 +337,19 @@ function showPopup(message, isSuccess = true) {
   }, 3000);
 }
 
+// Initialize and populate ride list on page load
+document.addEventListener("DOMContentLoaded", () => {
+    populateRideList();
+});
+
 // Initialize the app
 function initializeApp() {
-  showDefaultScreen();
-  checkScreenSizeAndPopulateRideList();
+//  showDefaultScreen();
+//  checkScreenSizeAndPopulateRideList();
+//  populateRideList()
 }
 
 // Call initializeApp when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", initializeApp);
 
-// Add event listener for window resize
-window.addEventListener("resize", checkScreenSizeAndPopulateRideList);
+

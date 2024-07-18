@@ -1,5 +1,5 @@
 use CabManageDB;
-DROP TABLE IF EXISTS UserBooking;
+DROP TABLE IF EXISTS Userbooking;
 DROP TABLE IF EXISTS Ride;
 DROP TABLE IF EXISTS Driver;
 DROP TABLE IF EXISTS Rider;
@@ -29,15 +29,19 @@ CREATE TABLE Ride (
     cost DECIMAL(10, 2) NOT NULL,
     driverid INT DEFAULT NULL,
     pickuptime DATETIME NOT NULL,
-    cartype int
+    cartype int,
+    ended boolean default FALSE
 );
-CREATE TABLE UserBooking (
-    bookingId INT AUTO_INCREMENT PRIMARY KEY,
-    userid INT NOT NULL,
-    rideid INT NOT NULL,
-    seat INT NOT NULL
+CREATE TABLE Userbooking (
+    bookingid INT AUTO_INCREMENT PRIMARY KEY,
+    userid INT,
+    rideid INT,
+    seat INT,
+    otp INT
 );
 use CabManageDB;
 select * from Rider;
+select * from Ride;
+select * from Userbooking;
 select * from Driver;
 show tables

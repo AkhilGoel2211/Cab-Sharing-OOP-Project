@@ -1,9 +1,13 @@
 package com.example.CabManageTest1.service;
 
+import com.example.CabManageTest1.CabManageTest1Application;
 import com.example.CabManageTest1.model.Driver;
+import com.example.CabManageTest1.model.Ride;
 import com.example.CabManageTest1.repository.DriverRepository;
+import com.example.CabManageTest1.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
 import java.util.Optional;
 
@@ -11,6 +15,9 @@ import java.util.Optional;
 public class DriverService {
     @Autowired
     private DriverRepository driverRepository;
+
+    @Autowired
+    private RideRepository rideRepository;
 
     public Driver saveDriver(Driver driver) {
         return driverRepository.save(driver);
@@ -27,4 +34,24 @@ public class DriverService {
         return driver.get().getId();
     }
 
+    public void acceptRide(int rideId, int driverId) {
+        Ride ride = rideRepository.findById(rideId)
+                .orElseThrow(() -> new RuntimeException("Ride not found"));
+        if((ride.getMaxcap()<=(2*(1+driverRepository.findById((long)driverId).get().getCartype())))&&(ride.getCartype()<=driverRepository.findById(driverId).get().getCartype())) {ride.setDriverid(driverId);
+        rideRepository.save(ride);}
+    }
+
+    public List<Ride> finishedRides(){
+        return rideRepository.findAllByDriveridAndEndedIsTrue((int)CabManageTest1Application.currentSesh);
+    }
+    public List<Ride> upcomingRides() {
+        return rideRepository.findAllByDriveridAndEndedIsFalse((int)CabManageTest1Application.currentSesh);
+    }
+
+    public void endRide(int rideId){
+        Ride ride = rideRepository.findById(rideId)
+                .orElseThrow(() -> new RuntimeException("Ride not found"));
+        ride.setEnded(true);
+        rideRepository.save(ride);
+    }
 }

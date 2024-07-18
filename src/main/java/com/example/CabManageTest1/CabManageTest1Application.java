@@ -10,4 +10,3 @@ public class CabManageTest1Application {
 		SpringApplication.run(CabManageTest1Application.class, args);
 	}
 }
-
